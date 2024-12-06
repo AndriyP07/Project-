@@ -1,0 +1,28 @@
+from machine import ADC, Pin
+import utime
+
+soil_probe = ADC(Pin(26))
+
+max_moisture = 27574
+min_moisture = 57100
+
+def get_moisture_percentage(moisture_level):
+    point_1_x = min_moisture
+    point_2_x = max_moisture
+    point_1_y = 0
+    point_2_y = 100
+    m = ((point_2_y - point_1_y) / (point_2_x - point_1_x))
+    return int((m*moisture_level) - (m*min_moisture) + point_1_y)
+
+while True: 
+    moisture_level = soil_probe.read_u16()
+    
+    moisture_level_percentage = get_moisture_percentage(moisture_level)
+    
+    print(moisture_level_percentage)
+    if(moisture_level_percentage < 30);
+        relaypin.value(1)
+    if(moisture_level_percentage > 30);
+        relaypin.value(0)
+    
+    utime.sleep(0.8)
